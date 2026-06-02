@@ -1,0 +1,24 @@
+# JARs — download via scripts/download_jars.sh
+# Exception: the shaded-hadoop uber JAR is bundled (no public Maven download URL)
+flink/usrlib/*.jar
+trino/queries/*.sql
+flink/sql/*.sql
+!flink/usrlib/flink-shaded-hadoop-3-uber-3.1.1.7.2.9.0-173-9.0.jar
+flink/plugins/**/*.jar
+*.jar
+
+# Airflow logs
+airflow/logs/
+
+# Runtime data
+nifi_data/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# macOS
+.DS_Store

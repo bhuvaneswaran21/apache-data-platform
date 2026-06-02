@@ -1,0 +1,134 @@
+{
+  "__inputs": [],
+  "__requires": [
+    { "type": "grafana",  "id": "grafana",  "name": "Grafana",  "version": "10.0.0" },
+    { "type": "datasource","id": "prometheus","name": "Prometheus","version": "1.0.0" }
+  ],
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Kafka Messages In/sec",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [{
+        "expr": "sum(rate(kafka_server_brokertopicmetrics_messagesin_total{topic='user_events'}[1m]))",
+        "legendFormat": "msg/s"
+      }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [
+        { "color": "green", "value": null },
+        { "color": "yellow", "value": 100 },
+        { "color": "red", "value": 500 }
+      ]}}}
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Flink Running Jobs",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "targets": [{
+        "expr": "flink_jobmanager_numRunningJobs",
+        "legendFormat": "jobs"
+      }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [
+        { "color": "red",   "value": null },
+        { "color": "green", "value": 1 }
+      ]}}}
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Flink Records In/sec",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "targets": [{
+        "expr": "sum(rate(flink_taskmanager_job_task_numRecordsIn[1m]))",
+        "legendFormat": "records/s"
+      }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [
+        { "color": "green", "value": null }
+      ]}}}
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "MinIO Storage Used",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "targets": [{
+        "expr": "minio_cluster_usage_total_bytes / 1024 / 1024 / 1024",
+        "legendFormat": "GB"
+      }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": { "defaults": {
+        "unit": "decgbytes",
+        "color": { "mode": "thresholds" },
+        "thresholds": { "steps": [{ "color": "green", "value": null }]}
+      }}
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Kafka Messages In/sec (user_events)",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [{
+        "expr": "sum(rate(kafka_server_brokertopicmetrics_messagesin_total{topic='user_events'}[1m]))",
+        "legendFormat": "messages/s"
+      }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" }}}
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Flink Checkpoint Duration (ms)",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "targets": [{
+        "expr": "flink_jobmanager_job_lastCheckpointDuration",
+        "legendFormat": "duration_ms"
+      }],
+      "fieldConfig": { "defaults": { "unit": "ms", "color": { "mode": "palette-classic" }}}
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Kafka Consumer Lag (flink-iceberg-group)",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "targets": [{
+        "expr": "sum(kafka_consumergroup_lag{consumergroup='flink-iceberg-group'}) by (topic)",
+        "legendFormat": "lag - {{topic}}"
+      }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" }}}
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Spark Active Tasks",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "targets": [{
+        "expr": "metrics_master_apps_number{state='running'}",
+        "legendFormat": "running apps"
+      }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" }}}
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["ecommerce", "flink", "kafka", "iceberg"],
+  "title": "E-Commerce Data Platform",
+  "uid": "ecommerce-platform-v1",
+  "version": 1
+}
